@@ -87,6 +87,10 @@ int main() {
 	ean = "5099750442227";
 	cout << ean << " was issued in " << eansearch->IssuingCountryLookup(ean) << endl;
 
+	cout << "*** BarcodeImage() base64 encoded" << endl;
+	ean = "5099750442227";
+	cout << ean << " image: <img src=\"data:image/gif;base64," << eansearch->BarcodeImage(ean, 300, 200) << "\">" << endl;
+
 	return 0;
 }
 

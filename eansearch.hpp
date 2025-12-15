@@ -33,6 +33,7 @@ public:
 	ProductList * CategorySearch(int category, const string & name, int only_language = 99, int page = 0) const;
 	ProductList * BarcodePrefixSearch(const string & prefix, int language = 1, int page = 0) const;
 	string IssuingCountryLookup(const string & ean) const;
+	string BarcodeImage(const string & ean, int width = 102, int height = 50) const;
 
 private:
 	bool APICall(const string & params, string & result) const;

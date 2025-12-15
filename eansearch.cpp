@@ -150,11 +150,24 @@ string EANSearch::IssuingCountryLookup(const string & ean) const
 	if (APICall("op=issuing-country&ean=" + ean, result)) {
 		error_code ec;
 		auto api_result = json::parse(result, ec);
-		return api_result.at(0).at("issuingCountry").as_string().c_str(); // BUG
+		return api_result.at(0).at("issuingCountry").as_string().c_str();
 	} else {
 		return "";
 	}
 }
+
+string EANSearch::BarcodeImage(const string & ean, int width, int height) const
+{
+	string result;
+	if (APICall("op=barcode-image&ean=" + ean + "&width=" + to_string(width) + "&height=" + to_string(height), result)) {
+        error_code ec;
+		auto api_result = json::parse(result, ec);
+		return api_result.at(0).at("barcode").as_string().c_str();
+	} else {
+		return "";
+	}
+}
+
 
 bool EANSearch::APICall(const string & params, string & output) const
 {
