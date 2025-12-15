@@ -39,13 +39,25 @@ Main public methods on [`EANSearch`](eansearch.hpp)
 
 To compile, you need Boost and OpenSSL installed.
 
-## Using the example
-1. Export your API token:
+On Debian and Ubuntu:
    ```sh
-   export EAN_SEARCH_API_TOKEN=your_token_here
+    sudo apt install libssl-dev boost-dev
    ```
-2. Build and run the example:
+
+On Windows with vcpgk
+   ```sh
+    vcpkg install openssl --triplet x32-windows
+   ```
+
+Build and run the example:
    ```sh
    make
    ./example
+   ```
+
+## Using the example
+
+Export your API token as an environment variable:
+   ```sh
+   export EAN_SEARCH_API_TOKEN=your_token_here
    ```
