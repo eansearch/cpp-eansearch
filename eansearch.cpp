@@ -8,7 +8,9 @@
 */
 
 #include <iostream>
-#include <regex>
+#include <cctype>
+#include <string>
+#include <sstream>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
@@ -17,9 +19,6 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/json/src.hpp>
 #include <boost/json.hpp>
-//#include <boost/url/src.hpp>
-#include <boost/url/encode.hpp>
-#include <boost/url/rfc/unreserved_chars.hpp>
 #include "eansearch.hpp"
 
 namespace beast = boost::beast; // from <boost/beast.hpp>
@@ -27,7 +26,6 @@ namespace http = beast::http;   // from <boost/beast/http.hpp>
 namespace net = boost::asio;    // from <boost/asio.hpp>
 namespace json = boost::json;   // from <boost/json.hpp>
 namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
-namespace urls = boost::urls;	// from  <boost/url/encode.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 using namespace std;
@@ -197,9 +195,25 @@ bool EANSearch::APICall(const string & params, string & output) const
 }
 
 string EANSearch::urlencode(const string & str) {
-	// TODO implement
-	//return urls::encode(str, urls::unreserved_chars); // using Boost Urls, but linker error
-	return regex_replace(str, std::regex("\\s"), "+"); // for now just replace whitespace
+    // RFC 3986 percent-encoding for query components: unreserved characters remain unencoded
+    // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+    static const char * hex = "0123456789ABCDEF";
+    string out;
+    out.reserve(str.size() * 3);
+
+    for (unsigned char c : str) {
+        if ( (c >= 'A' && c <= 'Z') ||
+             (c >= 'a' && c <= 'z') ||
+             (c >= '0' && c <= '9') ||
+             c == '-' || c == '_' || c == '.' || c == '~' ) {
+            out.push_back(static_cast<char>(c));
+        } else {
+            out.push_back('%');
+            out.push_back(hex[(c >> 4) & 0xF]);
+            out.push_back(hex[c & 0xF]);
+        }
+    }
+    return out;
 }
 
 ProductList * EANSearch::ParseProductList(const string & str) {
