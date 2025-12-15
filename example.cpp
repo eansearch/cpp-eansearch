@@ -5,6 +5,11 @@ using namespace std;
 
 int main() {
 	auto token = getenv("EAN_SEARCH_API_TOKEN");
+    if (token == nullptr || token == "") {
+        cout << "Please check your API token" << endl;
+        return 1;
+    }
+
 	auto * eansearch = new EANSearch(token);
 
 	cout << "*** BarcodeLookup()" << endl;
