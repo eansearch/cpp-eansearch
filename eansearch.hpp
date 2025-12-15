@@ -1,3 +1,12 @@
+/*
+ * A C++ class for EAN and ISBN name lookup and validation using the API on ean-search.org
+ * https://www.ean-search.org/ean-database-api.html
+ * 
+ * (c) 2025 Relaxed Communications GmBH, <info@relaxedcommunications.com>
+ * 
+ * License: MIT https://opensource.org/license/mit
+*/
+
 #include <string>
 #include <list>
 using namespace std;
