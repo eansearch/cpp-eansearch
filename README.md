@@ -46,7 +46,7 @@ On Debian and Ubuntu:
 
 On Windows with vcpgk
    ```sh
-    vcpkg install openssl --triplet x32-windows
+    vcpkg install openssl boost --triplet x32-windows
    ```
 
 Build and run the example:
