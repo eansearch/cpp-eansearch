@@ -32,12 +32,6 @@ using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 using namespace std;
 
-static string urlencode(const string & str) {
-	// TODO implement
-	//return urls::encode(str, urls::unreserved_chars); // using Boost Urls, but linker error
-	return regex_replace(str, std::regex("\\s"), "+"); // for now just replace whitespace
-}
-
 static Product * ProductFromJSON(const json::value & api_result) {
 	ProductFull * p = new ProductFull();
 	p->ean = api_result.at("ean").as_string();
@@ -51,26 +45,6 @@ static Product * ProductFromJSON(const json::value & api_result) {
 		// ignore, it's a simple Product
 	}
 	return p;
-}
-
-static ProductList * ParseProductList(const string & str) {
-	error_code ec;
-	auto api_result = json::parse(str, ec);
-	json::array * arr = nullptr;
-	if (!ec) {
-		arr = api_result.at("productlist").if_array();
-	}
-	if (ec || !arr) {
-		return nullptr;
-	}
-	ProductList * pl = new ProductList();
-	for (auto o : *arr) {
-		auto * p = ProductFromJSON(o);
-		if (p) {
-			pl->push_back(p);
-		}
-	}
-	return pl;
 }
 
 EANSearch::EANSearch(const string & token) {
@@ -220,4 +194,30 @@ bool EANSearch::APICall(const string & params, string & output) const
         return false;
     }
 	return true;
+}
+
+string EANSearch::urlencode(const string & str) {
+	// TODO implement
+	//return urls::encode(str, urls::unreserved_chars); // using Boost Urls, but linker error
+	return regex_replace(str, std::regex("\\s"), "+"); // for now just replace whitespace
+}
+
+ProductList * EANSearch::ParseProductList(const string & str) {
+	error_code ec;
+	auto api_result = json::parse(str, ec);
+	json::array * arr = nullptr;
+	if (!ec) {
+		arr = api_result.at("productlist").if_array();
+	}
+	if (ec || !arr) {
+		return nullptr;
+	}
+	ProductList * pl = new ProductList();
+	for (auto o : *arr) {
+		auto * p = ProductFromJSON(o);
+		if (p) {
+			pl->push_back(p);
+		}
+	}
+	return pl;
 }

@@ -46,6 +46,8 @@ public:
 
 private:
 	bool APICall(const string & params, string & result) const;
+    static string urlencode(const string & str);
+    static ProductList * ParseProductList(const string & str);
 
 	string token;
 };
