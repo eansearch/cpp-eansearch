@@ -71,7 +71,7 @@ Build and run the example:
    ./example
    ```
 
-## Using the example
+## Running the example
 
 Export your API token as an environment variable:
    ```sh
