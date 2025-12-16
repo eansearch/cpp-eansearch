@@ -31,17 +31,21 @@ using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 using namespace std;
 
 static Product * ProductFromJSON(const json::value & api_result) {
-	ProductFull * p = new ProductFull();
-	p->ean = api_result.at("ean").as_string();
-	p->name = api_result.at("name").as_string();
-	p->categoryId = stoi(api_result.at("categoryId").as_string().c_str());
-	p->categoryName = api_result.at("categoryName").as_string();
-	p->issuingCountry = api_result.at("issuingCountry").as_string();
-	try {
-		p->googleCategoryId = stoi(api_result.at("googleCategoryId").as_string().c_str());
-	} catch (const exception & e) {
-		// ignore, it's a simple Product
-	}
+	Product * p = nullptr;
+    auto json_product = api_result.if_object();
+    if (!json_product) {
+        if (json_product->if_contains("googleCategoryId")) {
+            p = new ProductFull();
+            auto * pf = static_cast<ProductFull *>(p);
+            pf->googleCategoryId = stoi(json_product->at("googleCategoryId").as_string().c_str());
+        } else {
+            p = new Product();
+        }
+        p->name = json_product->at("name").as_string();
+        p->categoryId = stoi(json_product->at("categoryId").as_string().c_str());
+        p->categoryName = json_product->at("categoryName").as_string();
+        p->issuingCountry = json_product->at("issuingCountry").as_string();
+    }
 	return p;
 }
 
