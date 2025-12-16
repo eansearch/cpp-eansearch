@@ -16,24 +16,40 @@ Primary classes and types
 - [`ProductList`](eansearch.hpp) — typedef for product lists
 
 Main public methods on [`EANSearch`](eansearch.hpp)
-- [`EANSearch::BarcodeLookup`](eansearch.hpp)
+- [`EANSearch::BarcodeLookup`](eansearch.hpp) \
     search by a single EAN, GTIN, UPC or ISBN-13 code
-- [`EANSearch::IsbnLookup`](eansearch.hpp)
+- [`EANSearch::IsbnLookup`](eansearch.hpp) \
     search by ISBN code (ISBN-10)
-- [`EANSearch::VerifyChecksum`](eansearch.hpp)
+- [`EANSearch::VerifyChecksum`](eansearch.hpp) \
     verify whether the checksum on any EAN, GTIN, UPC or ISBN-13 code is valid
-- [`EANSearch::ProductSearch`](eansearch.hpp)
+- [`EANSearch::ProductSearch`](eansearch.hpp) \
     search the product database by product name (exact search)
-- [`EANSearch::SimilarProductSearch`](eansearch.hpp)
+- [`EANSearch::SimilarProductSearch`](eansearch.hpp) \
     search the product database for similar product names
-- [`EANSearch::CategorySearch`](eansearch.hpp)
+- [`EANSearch::CategorySearch`](eansearch.hpp) \
     search the product database by product name, restricted by product category
-- [`EANSearch::BarcodePrefixSearch`](eansearch.hpp)
+- [`EANSearch::BarcodePrefixSearch`](eansearch.hpp) \
     search by the first digits of a barcode (prefix)
-- [`EANSearch::IssuingCountryLookup`](eansearch.hpp)
+- [`EANSearch::IssuingCountryLookup`](eansearch.hpp) \
     check the issuing country of any EAN, GTIN, UPC or ISBN-13 code
-- [`EANSearch::BarcodeImage`](eansearch.hpp)
+- [`EANSearch::BarcodeImage`](eansearch.hpp) \
     generate a PNG image of the barcode (base64 encoded)
+
+## Sample code
+
+   ```cpp
+    ...
+    auto * eansearch = new EANSearch(token);
+	ProductFull * p = eansearch->BarcodeLookup("5099750442227");
+	if (p) {
+		cout << ean << " is " << p->name << endl;
+    }
+    ...
+    ProductList * pl = eansearch->ProductSearch("Bananaboat");
+    ...
+   ```
+
+See [example.cpp](example.cpp) for more details on all API functions.
 
 ## Compiling
 
