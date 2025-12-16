@@ -71,6 +71,8 @@ Build and run the example:
    ./example
    ```
 
+Please note that the library is "header-only", so all code is included in the one heade file, but you will have to link with OpenSSL (for the https support).
+
 ## Running the example
 
 Export your API token as an environment variable:
