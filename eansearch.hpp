@@ -7,6 +7,9 @@
  * License: MIT https://opensource.org/license/mit
 */
 
+#ifndef EANSEARCH_HPP
+#define EANSEARCH_HPP
+
 #include <string>
 #include <list>
 using namespace std;
@@ -68,3 +71,4 @@ private:
 	string token;
 };
 
+#endif // EANSEARCH_HPP
