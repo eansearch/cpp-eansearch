@@ -166,7 +166,7 @@ bool EANSearch::APICall(const string & params, string & output) const
         ssl::context ctx(ssl::context::tlsv12_client);
         tcp::resolver resolver(ioc);
         ssl::stream<beast::tcp_stream> stream(ioc, ctx);
-        if(! SSL_set_tlsext_host_name(stream.native_handle(), host)) {// set SNI
+        if (!SSL_set_tlsext_host_name(stream.native_handle(), host)) { // set SNI
             boost::system::error_code ec{static_cast<int>(::ERR_get_error()), boost::asio::error::get_ssl_category()};
             throw boost::system::system_error{ec};
         }
