@@ -29,15 +29,15 @@ public:
     virtual ~Product() { };
 
     /// Barcode (EAN/GTIN/UPC)
-    std::string ean;
+    string ean;
     /// Product name
-    std::string name;
+    string name;
     /// Category identifier (numeric)
     int categoryId;
     /// Category name
-    std::string categoryName;
+    string categoryName;
     /// Issuing country
-    std::string issuingCountry;
+    string issuingCountry;
 };
 
 /**
@@ -90,7 +90,7 @@ public:
      * @brief Construct a new EANSearch object.
      * @param token API token string used for all requests.
      */
-    EANSearch(const std::string & token);
+    EANSearch(const string & token);
 
     /**
      * @brief Lookup a single barcode (EAN/GTIN/UPC/ISBN-13).
@@ -98,21 +98,21 @@ public:
      * @param language Preferred language for the product name (optional).
      * @return Pointer to ProductFull on success, nullptr on failure or not found.
      */
-    ProductFull * BarcodeLookup(const std::string & ean, int language = English) const;
+    ProductFull * BarcodeLookup(const string & ean, int language = English) const;
 
     /**
      * @brief Lookup an ISBN (ISBN-10).
      * @param isbn ISBN-10 string.
      * @return Pointer to ProductFull on success, nullptr on failure or not found.
      */
-    ProductFull * IsbnLookup(const std::string & isbn) const;
+    ProductFull * IsbnLookup(const string & isbn) const;
 
     /**
      * @brief Verify the checksum of an EAN/GTIN/UPC/ISBN-13 code.
      * @param ean Barcode to verify.
      * @return true if the checksum is valid, false otherwise or on error.
      */
-    bool VerifyChecksum(const std::string & ean) const;
+    bool VerifyChecksum(const string & ean) const;
 
     /**
      * @brief Exact product search by name.
@@ -123,7 +123,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * ProductSearch(const std::string & name, int only_language = Any, int page = 0) const;
+    ProductList * ProductSearch(const string & name, int only_language = Any, int page = 0) const;
 
     /**
      * @brief Search for similar product names.
@@ -134,7 +134,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * SimilarProductSearch(const std::string & name, int only_language = Any, int page = 1) const;
+    ProductList * SimilarProductSearch(const string & name, int only_language = Any, int page = 1) const;
 
     /**
      * @brief Search for products within a specific category.
@@ -146,7 +146,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * CategorySearch(int category, const std::string & name, int only_language = Any, int page = 0) const;
+    ProductList * CategorySearch(int category, const string & name, int only_language = Any, int page = 0) const;
 
     /**
      * @brief Search products by barcode prefix.
@@ -157,14 +157,14 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * BarcodePrefixSearch(const std::string & prefix, int language = English, int page = 0) const;
+    ProductList * BarcodePrefixSearch(const string & prefix, int language = English, int page = 0) const;
 
     /**
      * @brief Lookup the issuing country for a given barcode.
      * @param ean Barcode.
      * @return Issuing country as string on success, empty string on error.
      */
-    std::string IssuingCountryLookup(const std::string & ean) const;
+    string IssuingCountryLookup(const string & ean) const;
 
     /**
      * @brief Generate a PNG image of the barcode.
@@ -173,12 +173,12 @@ public:
      * @param height Image height in pixels (default 50).
      * @return Base64-encoded PNG data on success, empty string on error.
      */
-    std::string BarcodeImage(const std::string & ean, int width = 102, int height = 50) const;
+    string BarcodeImage(const string & ean, int width = 102, int height = 50) const;
 
 private:
-    bool APICall(const std::string & params, std::string & result) const;
-    static std::string urlencode(const std::string & str);
-    static ProductList * ParseProductList(const std::string & str);
+    bool APICall(const string & params, string & result) const;
+    static string urlencode(const string & str);
+    static ProductList * ParseProductList(const string & str);
 
     /// API token provided at construction time
     string token;
@@ -227,13 +227,6 @@ EANSearch::EANSearch(const string & token) {
     this->token = token;
 }
 
-    /**
-     * @brief Parse a product list JSON payload returned by the API.
-     * @param str Raw JSON string returned by the API.
-     * @return Newly allocated ProductList* on success, nullptr on error.
-     *
-     * Caller takes ownership of the returned ProductList and must delete it.
-     */
 ProductFull * EANSearch::BarcodeLookup(const string & ean, int language) const
 {
     string result;
