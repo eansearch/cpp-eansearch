@@ -59,6 +59,12 @@ public:
 typedef std::list<Product*> ProductList;
 
 /**
+ * @brief Helper to delete a ProductList object and all its contents.
+ * @param pl The list to delete
+ */
+void DeleteProductList(ProductList * pl);
+
+/**
  * @brief Language codes used by the API
  */
 enum Language {
@@ -202,6 +208,15 @@ namespace net = boost::asio;    // from <boost/asio.hpp>
 namespace json = boost::json;   // from <boost/json.hpp>
 namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+
+void DeleteProductList(ProductList * pl) {
+    if (pl) {
+        for (auto p : *pl) {
+            delete p;
+        }
+        delete pl;
+    }
+}
 
 static Product * ProductFromJSON(const json::value & api_result) {
     Product * p = nullptr;

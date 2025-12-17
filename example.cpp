@@ -49,7 +49,7 @@ int main() {
 				<< " issued in " << p->issuingCountry
 				<< endl;
 		}
-		delete pl;
+		DeleteProductList(pl);
 	}
 
 	cout << "*** SimilarProductSearch() iPhone Max whatever" << endl;
@@ -61,7 +61,7 @@ int main() {
 				<< " issued in " << p->issuingCountry
 				<< endl;
 		}
-		delete pl;
+		DeleteProductList(pl);
 	}
 
 	cout << "*** CategorySearch() Bananaboat in Music" << endl;
@@ -73,7 +73,7 @@ int main() {
 				<< " issued in " << p->issuingCountry
 				<< endl;
 		}
-		delete pl;
+		DeleteProductList(pl);
 	}
 
 	cout << "*** BarcodePrefixSearch() 4007249146" << endl;
@@ -85,7 +85,7 @@ int main() {
 				<< " issued in " << p->issuingCountry
 				<< endl;
 		}
-		delete pl;
+		DeleteProductList(pl);
 	}
 
 	cout << "*** IssuingCountryLookup()" << endl;

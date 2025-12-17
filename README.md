@@ -65,9 +65,9 @@ On Windows with vcpgk
     vcpkg install openssl boost --triplet x32-windows
    ```
 
-Build and run the example:
+Build and run the example (Linux):
    ```sh
-   make
+   c++ example.o -o example -lssl -lcrypto
    ./example
    ```
 
