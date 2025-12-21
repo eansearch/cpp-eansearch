@@ -15,6 +15,8 @@
 using namespace std;
 
 
+const int MAX_API_TRIES = 3;
+
 /**
  * @brief Basic product information.
  *
@@ -179,7 +181,7 @@ public:
     string BarcodeImage(const string & ean, int width = 102, int height = 50) const;
 
 private:
-    bool APICall(const string & params, string & result) const;
+    bool APICall(const string & params, string & result, int tries = 1) const;
     static string urlencode(const string & str);
     static ProductList * ParseProductList(const string & str);
 

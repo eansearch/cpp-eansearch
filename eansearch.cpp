@@ -9,6 +9,8 @@
 
 #include "eansearch.hpp"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/asio/connect.hpp>
@@ -161,7 +163,7 @@ string EANSearch::BarcodeImage(const string & ean, int width, int height) const
  * @param result Output parameter that receives the raw JSON response body.
  * @return true on success, false on network/SSL/parse error.
  */
-bool EANSearch::APICall(const string & params, string & output) const
+bool EANSearch::APICall(const string & params, string & output, int tries) const
 {
     auto const host = "api.ean-search.org";
     auto const port = "443";
@@ -197,6 +199,13 @@ bool EANSearch::APICall(const string & params, string & output) const
         if (ec) {
             throw boost::system::system_error{ec};
         }
+		if (res.result_int() == 429 && tries <= MAX_API_TRIES) {
+			this_thread::sleep_for(chrono::milliseconds(1000));
+			return APICall(params, output, tries+1);
+		}
+		if (res.result_int() != 200) {
+			return false;
+		}
     }
     catch(std::exception const & e) {
         std::cerr << "Error: " << e.what() << std::endl;
