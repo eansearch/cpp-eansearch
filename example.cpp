@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	auto token = getenv("EAN_SEARCH_API_TOKEN");
-    if (token == nullptr || token == "") {
+    if (token == nullptr) {
         cout << "Please check your API token" << endl;
         return 1;
     }
