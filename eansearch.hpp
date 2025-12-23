@@ -103,21 +103,21 @@ public:
      * @param language Preferred language for the product name (optional).
      * @return Pointer to ProductFull on success, nullptr on failure or not found.
      */
-    ProductFull * BarcodeLookup(const string & ean, int language = English) const;
+    ProductFull * BarcodeLookup(const string & ean, int language = English);
 
     /**
      * @brief Lookup an ISBN (ISBN-10).
      * @param isbn ISBN-10 string.
      * @return Pointer to ProductFull on success, nullptr on failure or not found.
      */
-    ProductFull * IsbnLookup(const string & isbn) const;
+    ProductFull * IsbnLookup(const string & isbn);
 
     /**
      * @brief Verify the checksum of an EAN/GTIN/UPC/ISBN-13 code.
      * @param ean Barcode to verify.
      * @return true if the checksum is valid, false otherwise or on error.
      */
-    bool VerifyChecksum(const string & ean) const;
+    bool VerifyChecksum(const string & ean);
 
     /**
      * @brief Exact product search by name.
@@ -128,7 +128,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * ProductSearch(const string & name, int only_language = Any, int page = 0) const;
+    ProductList * ProductSearch(const string & name, int only_language = Any, int page = 0);
 
     /**
      * @brief Search for similar product names.
@@ -139,7 +139,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * SimilarProductSearch(const string & name, int only_language = Any, int page = 1) const;
+    ProductList * SimilarProductSearch(const string & name, int only_language = Any, int page = 1);
 
     /**
      * @brief Search for products within a specific category.
@@ -151,7 +151,7 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * CategorySearch(int category, const string & name, int only_language = Any, int page = 0) const;
+    ProductList * CategorySearch(int category, const string & name, int only_language = Any, int page = 0);
 
     /**
      * @brief Search products by barcode prefix.
@@ -162,14 +162,14 @@ public:
      *
      * Caller takes ownership of the returned ProductList and must delete it.
      */
-    ProductList * BarcodePrefixSearch(const string & prefix, int language = English, int page = 0) const;
+    ProductList * BarcodePrefixSearch(const string & prefix, int language = English, int page = 0);
 
     /**
      * @brief Lookup the issuing country for a given barcode.
      * @param ean Barcode.
      * @return Issuing country as string on success, empty string on error.
      */
-    string IssuingCountryLookup(const string & ean) const;
+    string IssuingCountryLookup(const string & ean);
 
     /**
      * @brief Generate a PNG image of the barcode.
@@ -178,15 +178,22 @@ public:
      * @param height Image height in pixels (default 50).
      * @return Base64-encoded PNG data on success, empty string on error.
      */
-    string BarcodeImage(const string & ean, int width = 102, int height = 50) const;
+    string BarcodeImage(const string & ean, int width = 102, int height = 50);
+
+    /**
+     * @brief Return number of remaining credits this month.
+     * @return Remaining credits.
+     */
+	int CreditsRemaining();
 
 private:
-    bool APICall(const string & params, string & result, int tries = 1) const;
+    bool APICall(const string & params, string & result, int tries = 1);
     static string urlencode(const string & str);
     static ProductList * ParseProductList(const string & str);
 
     /// API token provided at construction time
     string token;
+	int remaining;
 };
 
 #endif // EANSEARCH_HPP

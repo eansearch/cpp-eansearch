@@ -59,9 +59,10 @@ static Product * ProductFromJSON(const json::value & api_result) {
 
 EANSearch::EANSearch(const string & token) {
     this->token = token;
+	this->remaining = -1;
 }
 
-ProductFull * EANSearch::BarcodeLookup(const string & ean, int language) const
+ProductFull * EANSearch::BarcodeLookup(const string & ean, int language)
 {
     string result;
     if (APICall("op=barcode-lookup&ean=" + ean + "&language=" + to_string(language), result)) {
@@ -73,7 +74,7 @@ ProductFull * EANSearch::BarcodeLookup(const string & ean, int language) const
     }
 }
 
-ProductFull * EANSearch::IsbnLookup(const string & isbn) const
+ProductFull * EANSearch::IsbnLookup(const string & isbn)
 {
     string result;
     if (APICall("op=barcode-lookup&isbn=" + isbn, result)) {
@@ -85,7 +86,7 @@ ProductFull * EANSearch::IsbnLookup(const string & isbn) const
     }
 }
 
-bool EANSearch::VerifyChecksum(const string & ean) const
+bool EANSearch::VerifyChecksum(const string & ean)
 {
     string result;
     if (APICall("op=verify-checksum&ean=" + ean, result)) {
@@ -96,7 +97,7 @@ bool EANSearch::VerifyChecksum(const string & ean) const
     }
 }
 
-ProductList * EANSearch::ProductSearch(const string & name, int only_language, int page) const
+ProductList * EANSearch::ProductSearch(const string & name, int only_language, int page)
 {
     string result;
     if (APICall("op=product-search&name=" + urlencode(name) + "&language=" + to_string(only_language) + "&page=" + to_string(page), result)) {
@@ -105,7 +106,7 @@ ProductList * EANSearch::ProductSearch(const string & name, int only_language, i
     return nullptr;
 }
 
-ProductList * EANSearch::SimilarProductSearch(const string & name, int only_language, int page) const
+ProductList * EANSearch::SimilarProductSearch(const string & name, int only_language, int page)
 {
     string result;
     if (APICall("op=similar-product-search&name=" + urlencode(name) + "&language=" + to_string(only_language) + "&page=" + to_string(page), result)) {
@@ -114,7 +115,7 @@ ProductList * EANSearch::SimilarProductSearch(const string & name, int only_lang
     return nullptr;
 }
 
-ProductList * EANSearch::CategorySearch(int category, const string & name, int only_language, int page) const
+ProductList * EANSearch::CategorySearch(int category, const string & name, int only_language, int page)
 {
     string result;
     if (APICall("op=category-search&category=" + to_string(category) + "&name=" + urlencode(name)
@@ -124,7 +125,7 @@ ProductList * EANSearch::CategorySearch(int category, const string & name, int o
     return nullptr;
 }
 
-ProductList * EANSearch::BarcodePrefixSearch(const string & prefix, int language, int page) const
+ProductList * EANSearch::BarcodePrefixSearch(const string & prefix, int language, int page)
 {
     string result;
     if (APICall("op=barcode-prefix-search&prefix=" + prefix
@@ -134,7 +135,7 @@ ProductList * EANSearch::BarcodePrefixSearch(const string & prefix, int language
     return nullptr;
 }
 
-string EANSearch::IssuingCountryLookup(const string & ean) const
+string EANSearch::IssuingCountryLookup(const string & ean)
 {
     string result;
     if (APICall("op=issuing-country&ean=" + ean, result)) {
@@ -146,7 +147,7 @@ string EANSearch::IssuingCountryLookup(const string & ean) const
     }
 }
 
-string EANSearch::BarcodeImage(const string & ean, int width, int height) const
+string EANSearch::BarcodeImage(const string & ean, int width, int height)
 {
     string result;
     if (APICall("op=barcode-image&ean=" + ean + "&width=" + to_string(width) + "&height=" + to_string(height), result)) {
@@ -157,13 +158,24 @@ string EANSearch::BarcodeImage(const string & ean, int width, int height) const
     }
 }
 
+int EANSearch::CreditsRemaining()
+{
+    string result;
+	if (remaining < 0) {
+		if (!APICall("op=account-status", result)) {
+			return -1;
+		}
+	}
+	return remaining;
+}
+
 /**
  * @brief Perform a synchronous HTTPS GET request to the API.
  * @param params Query parameters (without token/format).
  * @param result Output parameter that receives the raw JSON response body.
  * @return true on success, false on network/SSL/parse error.
  */
-bool EANSearch::APICall(const string & params, string & output, int tries) const
+bool EANSearch::APICall(const string & params, string & output, int tries)
 {
     auto const host = "api.ean-search.org";
     auto const port = "443";
@@ -205,10 +217,12 @@ bool EANSearch::APICall(const string & params, string & output, int tries) const
 		}
 		if (res.result_int() != 200) {
 			return false;
+		} else {
+			remaining = stoi(res.base()["X-Credits-Remaining"]);
 		}
     }
     catch(std::exception const & e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        cerr << "Error: " << e.what() << std::endl;
         return false;
     }
     return true;
