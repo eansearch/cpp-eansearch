@@ -94,7 +94,7 @@ int main() {
 
 	cout << "*** BarcodeImage() base64 encoded" << endl;
 	ean = "5099750442227";
-	cout << ean << " image: <img src=\"data:image/gif;base64," << api->BarcodeImage(ean, 102, 50) << "\">" << endl;
+	cout << ean << " image: <img src=\"data:image/png;base64," << api->BarcodeImage(ean, 102, 50) << "\">" << endl;
 
 	cout << "*** CreditsRemaining()" << endl;
 	cout << api->CreditsRemaining() << " credits remaining" << endl;
