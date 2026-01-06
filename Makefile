@@ -10,5 +10,5 @@ example: example.o eansearch.o
 	$(CXX) example.o eansearch.o -o $@ -lssl -lcrypto
 
 clean:
-	rm example *.o
+	rm -rf example *.o cov-int*
 
